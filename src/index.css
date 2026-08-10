@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Palette lifted from agentpit.dev (shadcn "slate"): neutrals carry a blue
+     bias toward the brand accent rather than being pure grey. */
+  :root {
+    color-scheme: light;
+    --background: 255 255 255; /* white */
+    --foreground: 2 8 23; /* slate-950 */
+    --muted: 71 85 105; /* slate-600 — body copy */
+    --subtle: 100 116 139; /* slate-500 — captions */
+    --line: 226 232 240; /* slate-200 */
+    --brand: 37 99 235; /* blue-600 #2563EB */
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 2 8 23; /* slate-950 */
+    --foreground: 248 250 252; /* slate-50 */
+    --muted: 148 163 184; /* slate-400 — body copy */
+    --subtle: 112 128 150; /* slate-500 nudged up: flat slate-500 is 4.2:1 here */
+    --line: 30 41 59; /* slate-800 */
+    --brand: 96 165 250; /* blue-400 #60A5FA */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reveals set themselves visible when motion is reduced; this also stops the
+     transition itself from animating, so content simply appears. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    margin: 0;
+    @apply bg-background font-sans text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-up {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0s forwards;
+  }
+
+  .animate-fade-up-delay-1 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.2s forwards;
+  }
+
+  .animate-fade-up-delay-2 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.4s forwards;
+  }
+
+  .animate-fade-up-delay-3 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.6s forwards;
+  }
+
+  .animate-fade-up-delay-4 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.8s forwards;
+  }
+
+  .animate-fade-in {
+    opacity: 0;
+    animation: fade-in 0.8s ease-out 0s forwards;
+  }
+
+  .animate-fade-in-delay {
+    opacity: 0;
+    animation: fade-in 0.8s ease-out 0.3s forwards;
+  }
+
+  .animate-scale-in {
+    opacity: 0;
+    animation: scale-in 0.8s ease-out 0s forwards;
+  }
+}

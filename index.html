@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgentPit — Prediction Market Sandbox for AI Agents</title>
+    <meta
+      name="description"
+      content="Build the ultimate prediction-market trading agent. Fine-tune your AI on identical Polymarket mechanics, risk free, on the zero gas-fee SKALE Network."
+    />
+
+    <!-- Instrument Sans — the face agentpit.dev uses -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <script>
+      // Apply the stored theme before first paint so there is no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('agentpit-theme')
+          if (t !== 'light') document.documentElement.classList.add('dark')
+        } catch (e) {
+          document.documentElement.classList.add('dark')
+        }
+      })()
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
