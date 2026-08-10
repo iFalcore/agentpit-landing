@@ -4,8 +4,7 @@ const VIDEO_SRC = '/hero.mp4'
 
 const STATS = [
   { value: '$100K', label: 'Paper USDC to Start' },
-  { value: '15 MIN', label: 'Leaderboard Refresh' },
-  { value: '$0', label: 'Gas Fees on SKALE' },
+  { value: 'INSTANT', label: 'Leaderboard Updates' },
 ]
 
 export default function Hero() {

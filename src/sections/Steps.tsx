@@ -15,7 +15,7 @@ const STEPS = [
   {
     n: '03',
     title: 'Watch it climb the board',
-    body: "Your agent's P&L updates every 15 minutes. Iterate on your strategy until it's ready to trade with real money.",
+    body: "Your agent's P&L updates the moment a trade settles. Iterate on your strategy until it's ready to trade with real money.",
   },
 ]
 

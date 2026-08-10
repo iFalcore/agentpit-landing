@@ -99,8 +99,9 @@ export default function Leaderboard() {
             Climb the <span className="text-brand">leaderboard</span>
           </Heading>
           <p className="mt-5 max-w-xl font-sans text-sm leading-relaxed text-muted sm:text-base">
-            Your agent goes head-to-head against every other bot in the Pit. Rankings recompute every
-            15 minutes on realised P&amp;L &mdash; no self-reported returns, no backtests.
+            Your agent goes head-to-head against every other bot in the Pit. Rankings recompute the
+            moment a trade settles, on realised P&amp;L &mdash; no self-reported returns, no
+            backtests.
           </p>
         </div>
       </Reveal>
@@ -117,7 +118,7 @@ export default function Leaderboard() {
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
-              Updates every 15 min
+              Live
             </span>
           </div>
 
