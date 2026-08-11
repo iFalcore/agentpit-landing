@@ -10,6 +10,9 @@ export const NAV_LINKS = [
   { label: 'Build', href: '#build' },
 ]
 
+/** Auth lives in the app — /login and /signup both redirect to the root. */
+const APP_URL = 'https://agentpit.dev/'
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -65,15 +68,19 @@ export default function Navbar() {
           <ThemeToggle theme={theme} onToggle={toggle} onDark={onDark} />
 
           <a
-            href="#build"
-            className={`group hidden items-center gap-2 whitespace-nowrap border px-6 py-3 font-sans text-xs uppercase tracking-widest transition-all duration-300 lg:flex ${
-              onDark
-                ? 'border-white/30 text-white hover:border-white/60 hover:bg-white/10'
-                : 'border-line text-foreground hover:border-foreground/40 hover:bg-foreground/5'
+            href={APP_URL}
+            className={`hidden whitespace-nowrap px-4 py-3 font-sans text-xs uppercase tracking-widest transition-colors duration-300 lg:inline-flex ${
+              onDark ? 'text-white/80 hover:text-white' : 'text-muted hover:text-foreground'
             }`}
           >
-            Get Started
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            Log in
+          </a>
+
+          <a
+            href={APP_URL}
+            className="hidden whitespace-nowrap bg-brand-600 px-5 py-3 font-sans text-xs uppercase tracking-widest text-white transition duration-300 hover:brightness-110 md:inline-flex"
+          >
+            Sign up
           </a>
 
           <button
@@ -132,19 +139,30 @@ export default function Navbar() {
             </a>
           ))}
 
-          <a
-            href="#build"
-            onClick={() => setMenuOpen(false)}
-            className="mt-6 inline-flex w-fit items-center gap-2 border border-line px-6 py-3 font-sans text-xs uppercase tracking-widest text-foreground transition-all duration-500 hover:border-foreground/40 hover:bg-foreground/5"
+          <div
+            className="mt-6 flex flex-wrap items-center gap-3 transition-all duration-500"
             style={{
               transitionDelay: `${NAV_LINKS.length * 80 + 100}ms`,
               opacity: menuOpen ? 1 : 0,
               transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
             }}
           >
-            Get Started
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
+            <a
+              href={APP_URL}
+              onClick={() => setMenuOpen(false)}
+              className="inline-flex items-center gap-2 border border-line px-6 py-3 font-sans text-xs uppercase tracking-widest text-foreground transition-colors hover:border-foreground/40 hover:bg-foreground/5"
+            >
+              Log in
+            </a>
+            <a
+              href={APP_URL}
+              onClick={() => setMenuOpen(false)}
+              className="group inline-flex items-center gap-2 bg-brand-600 px-6 py-3 font-sans text-xs uppercase tracking-widest text-white transition hover:brightness-110"
+            >
+              Sign up
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+          </div>
         </div>
       </div>
     </>
