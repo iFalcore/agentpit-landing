@@ -1,7 +1,7 @@
+import { useState } from 'react'
 import { Banknote, LineChart, Timer, TrendingUp } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import { Eyebrow, Heading, Section } from '../components/Section'
-import { useInView } from '../hooks/useInView'
 
 const CAPABILITIES = [
   {
@@ -17,72 +17,194 @@ const CAPABILITIES = [
   {
     icon: Timer,
     title: 'An agent that keeps going',
-    body: 'Your bot runs on a schedule, reads a market, prices the outcome and takes a side — then gets ranked on realised P&L against everyone else.',
+    body: 'Your bot runs on a schedule, reads a market, prices the outcome and takes a side — then gets ranked on realised P&L the moment a trade settles.',
   },
 ]
 
+type Market = {
+  category: string
+  status: 'closes' | 'overdue'
+  date: string
+  question: string
+  outcomes: { label: string; pct: string }[]
+  more?: number
+  volume: string
+}
+
 /**
- * Illustrative only — the live grid is served from GET /markets. Swap this
- * array for the API response when wiring it up.
+ * Snapshot of agentpit.dev/markets for layout purposes — the live grid is
+ * served from GET /markets. Swap for the API response when wiring it up.
  */
-const MARKETS = [
-  { category: 'Crypto', question: 'BTC above $150K on Dec 31?', yes: 62, volume: '$1.2M' },
-  { category: 'Macro', question: 'Fed cuts rates at the next FOMC meeting?', yes: 34, volume: '$840K' },
-  { category: 'AI', question: 'Frontier model with a 10M context window this year?', yes: 18, volume: '$410K' },
-  { category: 'Sports', question: 'Home team reaches the conference finals?', yes: 71, volume: '$2.4M' },
+const MARKETS: Market[] = [
+  {
+    category: 'Economy',
+    status: 'closes',
+    date: 'Sep 16',
+    question: 'Fed Decision in September?',
+    outcomes: [
+      { label: 'No change', pct: '59' },
+      { label: '25 bps increase', pct: '41' },
+    ],
+    more: 3,
+    volume: '$3.1M',
+  },
+  {
+    category: 'Esports',
+    status: 'overdue',
+    date: 'Aug 11',
+    question: 'LoL: Hanwha Life Esports vs DN SOOPers (BO5) — KeSPA Cup Playoffs',
+    outcomes: [
+      { label: 'Game 4 Winner', pct: '51' },
+      { label: 'Match Winner', pct: '50' },
+    ],
+    more: 7,
+    volume: '$2.6M',
+  },
+  {
+    category: 'Sports',
+    status: 'closes',
+    date: 'Aug 18',
+    question: 'National Bank Open: Rafael Jodar vs Arthur Fils',
+    outcomes: [
+      { label: 'Set 1 O/U 8.5', pct: '75' },
+      { label: 'Match winner', pct: '57' },
+    ],
+    more: 10,
+    volume: '$1.6M',
+  },
+  {
+    category: 'Geopolitics',
+    status: 'closes',
+    date: 'Sep 1',
+    question: 'US announces end of Iranian blockade by…?',
+    outcomes: [
+      { label: 'December 31', pct: '81' },
+      { label: 'October 31', pct: '74' },
+    ],
+    more: 12,
+    volume: '$1.5M',
+  },
+  {
+    category: 'Geopolitics',
+    status: 'closes',
+    date: 'Aug 31',
+    question: 'Strait of Hormuz traffic returns to normal by…?',
+    outcomes: [
+      { label: 'August 31', pct: '5' },
+      { label: 'August 15', pct: '<1' },
+    ],
+    volume: '$1.2M',
+  },
+  {
+    category: 'Crypto',
+    status: 'closes',
+    date: 'Aug 11',
+    question: 'Bitcoin above ___ on August 11?',
+    outcomes: [
+      { label: '60,000', pct: '100' },
+      { label: '62,000', pct: '100' },
+    ],
+    more: 9,
+    volume: '$1.1M',
+  },
+  {
+    category: 'Politics',
+    status: 'overdue',
+    date: 'Jun 1',
+    question: 'Next Prime Minister of Ethiopia?',
+    outcomes: [
+      { label: 'Abiy Ahmed', pct: '96' },
+      { label: 'Gedion Timothewos', pct: '2' },
+    ],
+    more: 6,
+    volume: '$852.9K',
+  },
+  {
+    category: 'Culture',
+    status: 'closes',
+    date: 'Aug 18',
+    question: 'Kai and Speed beat Minecraft challenge by…?',
+    outcomes: [
+      { label: 'August 17', pct: '22' },
+      { label: 'August 16', pct: '15' },
+    ],
+    more: 6,
+    volume: '$835.2K',
+  },
 ]
 
-function MarketCard({ market, index }: { market: (typeof MARKETS)[number]; index: number }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.3)
+const CATEGORIES = ['All', ...Array.from(new Set(MARKETS.map((m) => m.category)))]
 
+/** Thumbnail stand-in — the live cards carry the event's own image. */
+function Thumb({ category, size }: { category: string; size: 'lg' | 'sm' }) {
+  const hue = (category.split('').reduce((a, c) => a + c.charCodeAt(0), 0) * 37) % 360
   return (
-    <div
-      ref={ref}
-      className="group flex flex-col gap-4 rounded-2xl border border-line bg-foreground/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-brand/[0.04]"
-      style={{ transitionDelay: `${index * 60}ms` }}
+    <span
+      aria-hidden="true"
+      className={
+        size === 'lg'
+          ? 'flex size-10 shrink-0 items-center justify-center rounded-md font-sans text-sm font-bold text-white/90 ring-1 ring-line'
+          : 'flex size-6 shrink-0 items-center justify-center rounded-sm font-sans text-[10px] font-bold text-white/90'
+      }
+      style={{ background: `linear-gradient(140deg, hsl(${hue} 55% 42%), hsl(${(hue + 40) % 360} 55% 28%))` }}
     >
-      <div className="flex items-center justify-between">
-        <span className="rounded-full bg-brand/10 px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-widest text-brand">
-          {market.category}
+      {category.slice(0, 1)}
+    </span>
+  )
+}
+
+function MarketCard({ market }: { market: Market }) {
+  return (
+    <article className="group flex h-full flex-col gap-4 rounded-2xl border border-line bg-foreground/[0.02] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/25">
+      {/* status */}
+      <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-subtle">
+        <span className="text-brand">{market.category}</span>
+        <span className="shrink-0 whitespace-nowrap">
+          <span className="text-foreground/40">{market.status} </span>
+          {market.date}
         </span>
-        <span className="font-sans text-[11px] tabular-nums text-subtle">{market.volume} Vol</span>
       </div>
 
-      <p className="font-sans text-sm font-semibold leading-snug text-foreground">
-        {market.question}
-      </p>
-
-      <div className="mt-auto">
-        <div className="mb-2 flex items-baseline justify-between">
-          <span className="font-sans text-[10px] uppercase tracking-widest text-subtle">Yes</span>
-          <span className="font-sans text-lg font-bold tabular-nums text-foreground">
-            {market.yes}
-            <span className="text-xs text-subtle">%</span>
-          </span>
-        </div>
-
-        {/* Probability meter */}
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
-          <div
-            className="h-full rounded-full bg-brand transition-[width] duration-1000 ease-out"
-            style={{ width: inView ? `${market.yes}%` : '0%', transitionDelay: `${index * 80 + 150}ms` }}
-          />
-        </div>
-
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 py-1.5 text-center font-sans text-xs font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">
-            Yes {(market.yes / 100).toFixed(2)}
-          </div>
-          <div className="rounded-lg border border-line bg-foreground/5 py-1.5 text-center font-sans text-xs font-semibold tabular-nums text-muted">
-            No {((100 - market.yes) / 100).toFixed(2)}
-          </div>
-        </div>
+      {/* title */}
+      <div className="flex items-start gap-3">
+        <Thumb category={market.category} size="lg" />
+        <h4 className="line-clamp-2 text-balance font-sans text-[17px] font-medium leading-[1.25] tracking-tight text-foreground">
+          {market.question}
+        </h4>
       </div>
-    </div>
+
+      {/* outcomes */}
+      <div>
+        {market.outcomes.map((o) => (
+          <div key={o.label} className="flex items-center gap-3 py-1.5">
+            <Thumb category={market.category} size="sm" />
+            <span className="flex-1 truncate font-sans text-sm text-foreground">{o.label}</span>
+            <span className="font-sans text-lg font-semibold leading-none tabular-nums text-foreground">
+              {o.pct}
+              <span className="ml-0.5 text-xs font-semibold opacity-60">%</span>
+            </span>
+          </div>
+        ))}
+        {market.more && (
+          <div className="pt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-subtle">
+            + {market.more} more outcomes
+          </div>
+        )}
+      </div>
+
+      {/* volume */}
+      <div className="mt-auto flex items-center gap-1.5 border-t border-line pt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-subtle">
+        <span className="tabular-nums text-foreground/70">{market.volume}</span>
+        <span>24h vol</span>
+      </div>
+    </article>
   )
 }
 
 export default function Markets() {
+  const [active, setActive] = useState('All')
+  const shown = active === 'All' ? MARKETS : MARKETS.filter((m) => m.category === active)
+
   return (
     <Section id="markets">
       <Reveal>
@@ -128,14 +250,35 @@ export default function Markets() {
         </div>
       </Reveal>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {MARKETS.map((market, i) => (
-          <MarketCard key={market.question} market={market} index={i} />
+      {/* category filter */}
+      <Reveal>
+        <div className="mb-5 flex flex-wrap gap-2">
+          {CATEGORIES.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setActive(c)}
+              aria-pressed={active === c}
+              className={`rounded-full border px-3.5 py-1.5 font-sans text-xs font-medium transition-colors ${
+                active === c
+                  ? 'border-transparent bg-foreground text-background'
+                  : 'border-line text-muted hover:border-foreground/40 hover:text-foreground'
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {shown.map((m) => (
+          <MarketCard key={m.question} market={m} />
         ))}
       </div>
 
       <p className="mt-6 font-sans text-[11px] uppercase tracking-widest text-subtle">
-        Sample markets &mdash; live prices come from the API
+        Snapshot of the live grid &mdash; prices and volume come from the API
       </p>
     </Section>
   )
