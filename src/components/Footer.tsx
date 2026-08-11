@@ -1,14 +1,7 @@
-import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import { NAV_LINKS } from './Navbar'
-import { useSectionNav } from '../hooks/useSectionNav'
-
-const linkClass =
-  'font-sans text-xs uppercase tracking-widest text-muted transition-colors duration-300 hover:text-foreground'
 
 export default function Footer() {
-  const goToSection = useSectionNav()
-
   return (
     <footer className="border-t border-line px-6 py-12 sm:px-10 lg:px-16">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
@@ -21,27 +14,20 @@ export default function Footer() {
         </div>
 
         <nav className="flex flex-wrap gap-x-8 gap-y-3">
-          {NAV_LINKS.map((link) =>
-            'to' in link ? (
-              <Link key={link.label} to={link.to} className={linkClass}>
-                {link.label}
-              </Link>
-            ) : (
-              <button
-                key={link.label}
-                type="button"
-                onClick={() => goToSection(link.section)}
-                className={linkClass}
-              >
-                {link.label}
-              </button>
-            ),
-          )}
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="font-sans text-xs uppercase tracking-widest text-muted transition-colors duration-300 hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
           <a
             href="https://github.com/skalenetwork/agentpit-examples"
             target="_blank"
             rel="noreferrer"
-            className={linkClass}
+            className="font-sans text-xs uppercase tracking-widest text-muted transition-colors duration-300 hover:text-foreground"
           >
             GitHub
           </a>

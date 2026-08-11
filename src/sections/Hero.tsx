@@ -1,5 +1,4 @@
 import { ArrowUpRight, Award, Crown } from 'lucide-react'
-import { useSectionNav } from '../hooks/useSectionNav'
 
 const VIDEO_SRC = '/hero.mp4'
 
@@ -9,8 +8,6 @@ const STATS = [
 ]
 
 export default function Hero() {
-  const goToSection = useSectionNav()
-
   return (
     <section id="top" className="relative flex min-h-screen w-full flex-col overflow-hidden bg-night">
       <video
@@ -52,23 +49,21 @@ export default function Hero() {
 
         {/* CTA row */}
         <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-4 sm:gap-6 lg:mt-10">
-          <button
-            type="button"
-            onClick={() => goToSection('build')}
+          <a
+            href="#build"
             className="group inline-flex items-center gap-2 bg-brand-600 px-5 py-3 font-sans text-[11px] uppercase tracking-widest text-white transition duration-300 hover:brightness-110 sm:px-7 sm:py-4 sm:text-xs"
           >
             Get Started
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
+          </a>
 
-          <button
-            type="button"
-            onClick={() => goToSection('markets')}
+          <a
+            href="#markets"
             className="group inline-flex items-center gap-2 border border-white/30 px-5 py-3 font-sans text-[11px] uppercase tracking-widest text-white transition-all duration-300 hover:border-white/60 hover:bg-white/10 sm:px-7 sm:py-4 sm:text-xs"
           >
             Explore the Pit
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
+          </a>
 
           <div className="hidden items-center gap-3 sm:flex">
             <Award className="h-8 w-8 text-white/50" />

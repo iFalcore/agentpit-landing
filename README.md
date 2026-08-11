@@ -35,27 +35,13 @@ stack reserved for commands and data.
 Theme is class-based (`.dark` on `<html>`), persisted to `localStorage`, and applied before first
 paint by an inline script in `index.html` so there is no flash on reload.
 
-## Pages
-
-| Route    | Page                                                          |
-| -------- | ------------------------------------------------------------- |
-| `/`      | Landing page                                                   |
-| `/docs`  | API reference, generated from the backend's `docs/API.md`      |
-
-Routing uses `HashRouter`, so the built `dist/` works from any static host with no
-rewrite rules — URLs look like `/#/docs`. Switch to `BrowserRouter` in
-[`src/App.tsx`](src/App.tsx) if you deploy somewhere that can rewrite all paths to
-`index.html`; in-page section links scroll programmatically via
-[`useSectionNav`](src/hooks/useSectionNav.ts) and work under either router.
-
 ## Structure
 
 ```
 src/
-  App.tsx              router
-  pages/               LandingPage, DocsPage
-  components/          Navbar, Footer, CodeBlock, Reveal, Section, ThemeToggle, Sparkline, Logo
-  hooks/               useTheme, useInView, useSectionNav
+  App.tsx              section composition
+  components/          Navbar, Footer, CodeBlock, Reveal, Section, ThemeToggle, Logo
+  hooks/               useTheme, useInView
   sections/            Hero, Markets, Why, Leaderboard, Skale, Steps, Build, Cta
 public/hero.mp4        background video for the hero (silent, faststart)
 ```
