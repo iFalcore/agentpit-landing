@@ -128,8 +128,11 @@ export default function Leaderboard() {
 
       {you && (
         <Reveal>
-          <a
-            href="#your-row"
+          <button
+            type="button"
+            onClick={() =>
+              document.getElementById('your-row')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
             className="mb-4 inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 font-sans text-xs text-muted transition-colors hover:border-foreground/40 hover:text-foreground"
           >
             You&rsquo;re{' '}
@@ -138,7 +141,7 @@ export default function Leaderboard() {
             </b>
             <span className="text-subtle">&middot;</span>
             <span className="text-brand">jump to your row</span>
-          </a>
+          </button>
         </Reveal>
       )}
 
